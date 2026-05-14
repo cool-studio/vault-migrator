@@ -1,0 +1,38 @@
+{
+  "name": "@cool-studio/vault-migrator-lib",
+  "version": "0.0.1",
+  "description": "A library to standardise I/O for different password managers export formats.",
+  "homepage": "https://github.com/cool-studio/vault-migrator#readme",
+  "bugs": {
+    "url": "https://github.com/cool-studio/vault-migrator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cool-studio/vault-migrator.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": {
+    "name": "Jamie Wood",
+    "email": "jamie@cool.studio",
+    "url": "https://cool.studio"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "watch:build": "npm run clean && tsc --watch"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3",
+    "rimraf": "^6.1.3",
+    "typescript": "^6.0.3"
+  },
+  "files": [
+    "dist",
+    "!dist/test.*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
