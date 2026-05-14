@@ -1,6 +1,6 @@
 {
   "name": "@cool-studio/vault-migrator-lib",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library to standardise I/O for different password managers export formats.",
   "homepage": "https://github.com/cool-studio/vault-migrator#readme",
   "bugs": {
@@ -34,5 +34,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "parse-uri": "^2.0.6"
   }
 }

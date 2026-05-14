@@ -1,4 +1,5 @@
 import { Map } from "../utils/Map";
+import { OTP } from "./OTP";
 
 export class Credential {
   name?: string;
@@ -7,7 +8,7 @@ export class Credential {
   url?: string[];
   notes?: string;
   folders?: string[];
-  otp?: string;
+  otp?: OTP;
   customFields: Map<string> = new Map<string>();
 
   public setName(name: string): this {
@@ -50,7 +51,7 @@ export class Credential {
     return this;
   }
 
-  public setOtp(otp: string): this {
+  public setOtp(otp: OTP): this {
     this.otp = otp;
     return this;
   }

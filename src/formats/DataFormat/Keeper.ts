@@ -4,6 +4,7 @@ export interface KeeperJSON {
 }
 
 export interface KeeperSharedFolder {
+  [key: string]: any;
   path: string;
   manage_users: boolean;
   manage_records: boolean;
@@ -23,6 +24,7 @@ export interface CustomFields {
 }
 
 export interface KeeperRecord {
+  $type: string;
   title: string;
   login: string;
   password: string;
