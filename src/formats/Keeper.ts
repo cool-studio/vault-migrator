@@ -14,6 +14,7 @@ import { Folder } from "../models/Folder";
 import { UnsupportedInImport } from "../errors/UnsupportedInImport";
 import { OTP } from "../models/OTP";
 import { MigratorError } from "../errors/MigratorError";
+import { Card } from "../models/Card";
 
 export interface KeeperExport {}
 
@@ -26,6 +27,8 @@ export interface KeeperDigestOptions extends FormatDigestOptions {
 }
 
 export class Keeper extends AbstractFormat {
+  filetype = "json";
+
   ingest(vault: Vault, data: any, options: KeeperIngestOptions): this {
     const jsonData = JSON.parse(data) as KeeperJSON;
 
@@ -46,7 +49,15 @@ export class Keeper extends AbstractFormat {
     if (jsonData.records) {
       jsonData.records.forEach((record) => {
         this.wrapError(vault, () => {
-          if (record.$type && record.$type !== "login") {
+          if (record.custom_fields && record.custom_fields["$paymentCard::1"]) {
+            this.ingestCard(vault, record, options);
+            return;
+          }
+
+          if (
+            record.$type &&
+            !["login", "Log In - Privacy Screen enabled"].includes(record.$type)
+          ) {
             throw new UnsupportedInImport(
               `Unknown Record Type ${record.$type} in Keeper`,
               `Credential: ${record.title}`,
@@ -81,22 +92,30 @@ export class Keeper extends AbstractFormat {
             });
           }
 
-          if (Object.keys(record.custom_fields).length > 0) {
+          if (
+            record.custom_fields &&
+            Object.keys(record.custom_fields).length > 0
+          ) {
             this.wrapError(vault, () => {
               Object.keys(record.custom_fields).forEach((key) => {
                 if (key.charAt(0) === "$") {
-                  if (key === "$oneTimeCode") {
+                  if (key === "$oneTimeCode" || key === "$oneTimeCode::1") {
                     const otp = OTP.fromUri(record.custom_fields[key]);
                     if (options.redact) {
                       otp.secret = "REDACTED_SECRET";
                     }
                     credential.setOtp(otp);
-                  } else if (key.indexOf("$passkey::") !== -1) {
-                    throw new UnsupportedInImport(
-                      "Passkeys are not currently supported in Keeper.",
-                      `Credential: ${record.title}`,
+                  } else if (key.indexOf("$passkey:") !== -1) {
+                    vault.errors.push(
+                      new UnsupportedInImport(
+                        "Passkeys are not currently supported in Keeper.",
+                        `Credential: ${record.title}`,
+                      ),
                     );
+                  } else if (key.indexOf("$url::") !== -1) {
+                    credential.addUrl(record.custom_fields[key]);
                   } else {
+                    console.log(record);
                     throw new UnsupportedInImport(
                       `Magic Custom Field "${key} not supported in Keeper.`,
                       `Credential: ${record.title}`,
@@ -116,6 +135,32 @@ export class Keeper extends AbstractFormat {
     }
 
     return this;
+  }
+
+  ingestCard(
+    vault: Vault,
+    record: KeeperRecord,
+    options: KeeperIngestOptions,
+  ): void {
+    const card = new Card();
+
+    card.name = record.title;
+    card.notes = record.notes;
+
+    if (record.custom_fields) {
+      const paymentCard = record.custom_fields["$paymentCard::1"];
+
+      card.cardNumber = options.redact
+        ? "{{ REDACTED }}"
+        : paymentCard.cardNumber;
+      card.cardExpiration = paymentCard.cardExpirationDate;
+      card.cardSecurity = options.redact
+        ? "{{ REDACTED }}"
+        : paymentCard.cardSecurityCode;
+      card.cardHolderName = record.custom_fields["$text:Cardholder Name:1"];
+
+      vault.cards.push(card);
+    }
   }
 
   digest(vault: Vault, options: KeeperDigestOptions): any {
@@ -167,7 +212,7 @@ export class Keeper extends AbstractFormat {
         custom_fields: credential.customFields.contents,
       } as KeeperRecord;
 
-      if (credential.otp) {
+      if (credential.otp && record.custom_fields) {
         record.custom_fields["$oneTimeCode"] = credential.otp.toUri();
       }
 

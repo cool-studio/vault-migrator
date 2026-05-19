@@ -1,15 +1,16 @@
 import { Map } from "../utils/Map";
 import { OTP } from "./OTP";
+import { VaultItem } from "./Vault";
 
-export class Credential {
-  name?: string;
+export class Credential extends VaultItem {
   username?: string;
   password?: string;
   url?: string[];
-  notes?: string;
   folders?: string[];
   otp?: OTP;
-  customFields: Map<string> = new Map<string>();
+
+  reprompt: boolean = false;
+  favourite: boolean = false;
 
   public setName(name: string): this {
     this.name = name;

@@ -1,3 +1,5 @@
+import { Keeper } from "../Keeper";
+
 export interface KeeperJSON {
   shared_folders: KeeperSharedFolder[];
   records: KeeperRecord[];
@@ -20,7 +22,8 @@ export interface KeeperSharedFolderPermissions {
 }
 
 export interface CustomFields {
-  [key: string]: string;
+  [key: string]: any;
+  "$paymentCard::1": KeeperCard;
 }
 
 export interface KeeperRecord {
@@ -48,4 +51,10 @@ export interface KeeperRecordSharedFolder {
   shared_folder: string;
   can_edit: boolean;
   can_share: boolean;
+}
+
+export interface KeeperCard {
+  cardNumber: string;
+  cardExpirationDate: string;
+  cardSecurityCode: string;
 }

@@ -1,10 +1,6 @@
-import { Keeper, Bitwarden } from "./formats";
+import { Keeper, Bitwarden, IngestOptions, DigestOptions } from "./formats";
 
-import {
-  AbstractFormat,
-  FormatDigestOptions,
-  FormatIngestOptions,
-} from "./formats/abstractFormat";
+import { AbstractFormat } from "./formats/abstractFormat";
 
 import { Vault } from "./models/Vault";
 
@@ -26,7 +22,7 @@ class Migrator {
     this.vault = new Vault();
   }
 
-  public ingest(data: string, options: FormatIngestOptions): this {
+  public ingest(data: string, options: IngestOptions): this {
     const formatter = this.getFormatter(options.type);
 
     formatter.ingest(this.vault, data, options);
@@ -34,7 +30,7 @@ class Migrator {
     return this;
   }
 
-  public digest(options: FormatDigestOptions): any {
+  public digest(options: DigestOptions): any {
     const formatter = this.getFormatter(options.type);
 
     return formatter.digest(this.vault, options);

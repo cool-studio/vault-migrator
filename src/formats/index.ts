@@ -1,4 +1,11 @@
-import { Bitwarden } from "./Bitwarden";
-import { Keeper } from "./Keeper";
+import {
+  Bitwarden,
+  BitwardenDigestOptions,
+  BitwardenIngestOptions,
+} from "./Bitwarden";
+import { Keeper, KeeperDigestOptions, KeeperIngestOptions } from "./Keeper";
 
-export { Bitwarden, Keeper };
+type IngestOptions = KeeperIngestOptions | BitwardenIngestOptions;
+type DigestOptions = KeeperDigestOptions | BitwardenDigestOptions;
+
+export { Bitwarden, Keeper, IngestOptions, DigestOptions };

@@ -12,7 +12,15 @@ export interface FormatDigestOptions {
 
 export abstract class AbstractFormat {
   abstract ingest(vault: Vault, data: any, options: FormatIngestOptions): this;
+
+  /**
+   * @param vault
+   * @param options
+   * @return The importable contents for the provided password manager, with the filetype in this.filetype.
+   */
   abstract digest(vault: Vault, options: FormatDigestOptions): any;
+
+  public filetype: string = "json";
 
   protected wrapError(vault: Vault, handle: Function) {
     try {
