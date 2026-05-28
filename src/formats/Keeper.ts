@@ -1,20 +1,20 @@
+import { MigratorError } from "../errors/MigratorError";
+import { UnsupportedInImport } from "../errors/UnsupportedInImport";
+import { Card } from "../models/Card";
+import { Credential } from "../models/Credential";
+import { Folder } from "../models/Folder";
+import { OTP } from "../models/OTP";
+import { Vault } from "../models/Vault";
 import {
   AbstractFormat,
   FormatDigestOptions,
   FormatIngestOptions,
 } from "./abstractFormat";
-import { Vault } from "../models/Vault";
 import {
   KeeperJSON,
   KeeperRecord,
   KeeperSharedFolder,
 } from "./DataFormat/Keeper";
-import { Credential } from "../models/Credential";
-import { Folder } from "../models/Folder";
-import { UnsupportedInImport } from "../errors/UnsupportedInImport";
-import { OTP } from "../models/OTP";
-import { MigratorError } from "../errors/MigratorError";
-import { Card } from "../models/Card";
 
 export interface KeeperExport {}
 
@@ -37,6 +37,9 @@ export class Keeper extends AbstractFormat {
         const vaultFolder = new Folder(true);
 
         Object.keys(folder).forEach((key) => {
+          if (key === "uid") {
+            vaultFolder.id = folder[key];
+          }
           if (!["path"].includes(key)) {
             vaultFolder.customFields.set(key, folder[key]);
           }

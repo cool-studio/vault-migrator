@@ -1,5 +1,3 @@
-import { Keeper } from "../Keeper";
-
 export interface KeeperJSON {
   shared_folders: KeeperSharedFolder[];
   records: KeeperRecord[];

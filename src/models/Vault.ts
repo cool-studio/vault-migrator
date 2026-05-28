@@ -1,7 +1,7 @@
-import { Folder } from "./Folder";
-import { Credential } from "./Credential";
 import { Map } from "../utils/Map";
 import { Card } from "./Card";
+import { Credential } from "./Credential";
+import { Folder } from "./Folder";
 
 export class Vault {
   public folders: Map<Folder> = new Map<Folder>();

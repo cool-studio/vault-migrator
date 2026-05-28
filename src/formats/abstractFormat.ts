@@ -1,5 +1,5 @@
-import { Vault } from "../models/Vault";
 import { MigratorError } from "../errors/MigratorError";
+import { Vault } from "../models/Vault";
 
 export interface FormatIngestOptions {
   type: string;

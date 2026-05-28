@@ -1,4 +1,3 @@
-import { Map } from "../utils/Map";
 import { OTP } from "./OTP";
 import { VaultItem } from "./Vault";
 

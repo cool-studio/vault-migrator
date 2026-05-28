@@ -1,4 +1,4 @@
-import { Keeper, Bitwarden, IngestOptions, DigestOptions } from "./formats";
+import { Bitwarden, DigestOptions, IngestOptions, Keeper } from "./formats";
 
 import { AbstractFormat } from "./formats/abstractFormat";
 

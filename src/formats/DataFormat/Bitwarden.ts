@@ -1,5 +1,6 @@
 export interface BitwardenJSON {
   encrypted: boolean;
+  collections: BitwardenCollection[];
   folders: BitwardenFolder[];
   items: BitwardenItem[];
 }
@@ -9,11 +10,13 @@ export interface BitwardenFolder {
   id: string;
 }
 
+export interface BitwardenCollection {
+  id: string;
+  organizationId: string;
+  name: string;
+}
+
 export interface BitwardenItem {
-  passwordHistory: {
-    lastUsedDate: string;
-    password: string;
-  }[];
   revisionDate: string;
   creationDate: string;
   id: string;
@@ -34,6 +37,10 @@ export interface BitwardenItem {
 
 export interface BitwardenLogin extends BitwardenItem {
   type: 1;
+  passwordHistory: {
+    lastUsedDate: string;
+    password: string;
+  }[];
   login: {
     uris: { uri: string }[];
     fido2Credentials: {
