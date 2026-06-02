@@ -135,6 +135,11 @@ export class Bitwarden extends AbstractFormat {
       });
     }
 
+    const userCollection = collectionStore.get(options.username);
+    if (credentialJson.collectionIds.length === 0 && userCollection) {
+      credentialJson.collectionIds.push(userCollection.id);
+    }
+
     let uris = [] as {
       uri: string;
     }[];
