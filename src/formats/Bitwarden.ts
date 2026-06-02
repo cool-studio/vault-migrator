@@ -115,8 +115,8 @@ export class Bitwarden extends AbstractFormat {
     if (credential.folders && credential.folders.length > 0) {
       credential.folders.forEach((folder) => {
         const folderId = folderIdMap.get(folder);
-
         if (!folderId) {
+          // This is a collection.
           const vaultFolder = folders.get(folder);
           if (vaultFolder && vaultFolder.shared && vaultFolder.id) {
             if (!collectionStore.has(vaultFolder.id)) {
@@ -129,17 +129,8 @@ export class Bitwarden extends AbstractFormat {
             }
           }
         } else {
-          const collectionName =
-            options.username + "/" + folder.replace(/\\/g, "/");
-
-          if (!collectionStore.has(folder)) {
-            collectionStore.set(folder, collectionName);
-          }
-
-          const collection = collectionStore.get(folder);
-          if (collection && credentialJson.collectionIds) {
-            credentialJson.collectionIds.push(collection.id);
-          }
+          // This is an actual folder.
+          credentialJson.folderId = folderId;
         }
       });
     }
