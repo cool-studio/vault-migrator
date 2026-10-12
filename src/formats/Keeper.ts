@@ -15,7 +15,7 @@ import { UnsupportedInImport } from "../errors/UnsupportedInImport";
 import { OTP } from "../models/OTP";
 import { MigratorError } from "../errors/MigratorError";
 
-export interface KeeperExport {}
+export interface KeeperExport { }
 
 export interface KeeperIngestOptions extends FormatIngestOptions {
   type: "keeper";
@@ -85,7 +85,7 @@ export class Keeper extends AbstractFormat {
             this.wrapError(vault, () => {
               Object.keys(record.custom_fields).forEach((key) => {
                 if (key.charAt(0) === "$") {
-                  if (key === "$oneTimeCode") {
+                  if (key === "$oneTimeCode" || (key.indexOf("$otp:Two-Factor Code:") !== -1)) {
                     const otp = OTP.fromUri(record.custom_fields[key]);
                     if (options.redact) {
                       otp.secret = "REDACTED_SECRET";
@@ -147,22 +147,22 @@ export class Keeper extends AbstractFormat {
         login_url: credential.url ? credential.url[0] : null,
         folders: credential.folders
           ? credential.folders.map((folder) => {
-              const folderData = vault.folders.get(folder);
+            const folderData = vault.folders.get(folder);
 
-              if (!folderData) {
-                throw new MigratorError("Folder doesn't exist?");
-              }
+            if (!folderData) {
+              throw new MigratorError("Folder doesn't exist?");
+            }
 
-              if (folderData.shared) {
-                return {
-                  shared_folder: folder,
-                };
-              } else {
-                return {
-                  folder: folder,
-                };
-              }
-            })
+            if (folderData.shared) {
+              return {
+                shared_folder: folder,
+              };
+            } else {
+              return {
+                folder: folder,
+              };
+            }
+          })
           : [],
         custom_fields: credential.customFields.contents,
       } as KeeperRecord;
