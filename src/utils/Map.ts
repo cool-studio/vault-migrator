@@ -11,11 +11,11 @@ export class Map<T> {
     this.contents = {};
   }
 
-  exists(key: string) {
+  exists(key: string): boolean {
     return !!this.contents[key];
   }
 
-  get(key: string) {
+  get(key: string): T | null {
     if (this.exists(key)) return this.contents[key];
 
     return null;

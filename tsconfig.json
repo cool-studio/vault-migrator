@@ -5,7 +5,10 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node"],
+    "sourceMap": true
   },
   "include": ["src/**/*"]
 }
